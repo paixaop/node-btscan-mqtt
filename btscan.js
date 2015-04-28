@@ -21,8 +21,6 @@
 var mqtt = require('mqtt');
 var fs = require('fs');
 
-require("console-stamp")(console, "HH:MM:ss.l", '[' + process.pid + ']');
-
 var Scanner = require("bluetooth-scanner");
 var cli = require('commander');
 var options = {};
@@ -65,9 +63,27 @@ cli
   .option('--no-unauthorized',
           'if true self signed certificates will be rejected and you need to pass a cafile' +
           'with the certificate of the certificate authority you are using',
-          true)
-  .parse(process.argv);
+          true);
   
+  
+  cli.on('--help', function(){
+    console.log('  Scan for Bluetooth devices and publish a message to a MQTT Broker for each device found.\n');
+    console.log('  Message format:\n');
+    console.log('    <Module Name>,<Device Type>,<MAC Addr>,<Device Name>\n');
+    console.log('  Where:\n');
+    console.log('    <Module Name> is the name by which the computer running this script is known');
+    console.log('                  on the network. For instance \'MasterBedroom\'. Module names cannot have \',\'.');
+    console.log('                  or any other special character. Onlyletters, numbers and spaces are allowed.');
+    console.log('');
+    console.log('    <Device Type> defaults to \'bluetooth\'\n');
+    console.log('    <MAC Addr>    is the device\'s MAC address\n');
+    console.log('    <Device Name> is the bluetooth device\'s name\n');
+    console.log('');
+  });
+  
+  cli.parse(process.argv);
+  
+require("console-stamp")(console, "HH:MM:ss.l", '[' + process.pid + ']');
 
 if (!cli.host) {
   console.log('please specify host of the mqtt broker');
@@ -157,6 +173,9 @@ client.on('connect', function () {
     scanner = new Scanner(cli.interface,function(mac, name) {
       // <Module Name>,<device type>,<MAC Addr>,<BT device Name>
       var msg = cli.name + "," + cli.device_type + "," + mac + "," + name
+      if (cli.debug) {
+        console.log('Found:',msg);
+      }
       client.publish(cli.topic, msg);
     });
   }
@@ -165,10 +184,6 @@ client.on('connect', function () {
   }
 });
 
-function callback (mac, name) {
-  console.log("Mac: " +mac+", Name: "+name );
-  
-}
 
 if (cli.timeout) {
   setTimeout(function() {
