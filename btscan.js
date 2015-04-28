@@ -161,20 +161,36 @@ options.rejectUnauthorized = cli.unauthorized;
 var scanner;
 
 console.log('connecting...');
+console.time( "MyConnectTimer" );
 var client = mqtt.connect(options);
 
 client.on('connect', function () {
   console.log('MQTT Broker Conncetion OK');
-  client.publish('messages', 'Current time is: ' + new Date());
+  console.timeEnd("MyConnectTimer");
+  var msg = cli.name + "," + cli.device_type + "," + mac + "," + name
+  client.publish(cli.topic, cli.name + "," + cli.device_type + ",scan start");
   
   
   if (cli.scan) {
     console.log('starting scan...');
+    
+    if (cli.timeout) {
+      setTimeout(function() {
+        client.publish(cli.topic, cli.name + "," + cli.device_type + ",scan timeout");
+        console.log('Timeout. Terminating scanner.');
+        if (scanner) {
+          scanner.destroy;  
+        }
+        process.exit();
+      }, cli.timeout);
+    }
+
+    // Start Scan
     scanner = new Scanner(cli.interface,function(mac, name) {
       // <Module Name>,<device type>,<MAC Addr>,<BT device Name>
-      var msg = cli.name + "," + cli.device_type + "," + mac + "," + name
+      var msg = cli.name + ',' + cli.device_type + ',' + mac + ',' + name;
       if (cli.debug) {
-        console.log('Found:',msg);
+        console.log('publish message. Topic: ' + cli.topic + ' - ' + msg);
       }
       client.publish(cli.topic, msg);
     });
@@ -185,16 +201,6 @@ client.on('connect', function () {
 });
 
 
-if (cli.timeout) {
-  setTimeout(function() {
-    console.log('Timeout. Terminating scanner.');
-    if (scanner) {
-      scanner.destroy;  
-    }
-    
-    process.exit();
-  }, cli.timeout);
-}
 
 client.on('message', function(topic, message) {
   console.log('Message:', topic, message.toString('ascii'));
