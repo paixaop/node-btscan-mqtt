@@ -1,0 +1,21 @@
+{
+  "name": "bt_scan",
+  "version": "1.0.0",
+  "description": "Scan for bluetooth devices and report them on a MQTT channel",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mqtt",
+    "iot",
+    "bluetooth"
+  ],
+  "author": "Pedro Paixao",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.8.1",
+    "console-stamp": "^0.1.6",
+    "mqtt": "^1.1.3"
+  }
+}
