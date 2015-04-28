@@ -13,7 +13,7 @@ Device type is 'bluetooth'
 MAC Addr is the device's MAC address
 BT device name is the bluetooth device's name
 
-  Usage: btscan [options]
+    Usage: btscan [options]
    
     Options:
    
