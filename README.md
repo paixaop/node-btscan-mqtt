@@ -3,7 +3,7 @@ Scan for bluetooth devices and publish a message to a mqtt broker for each devic
 
 Message format is:
 
- <Module Name>,<device type>,<MAC Addr>,<BT device Name>
+    <Module Name>,<device type>,<MAC Addr>,<BT device Name>
 
 Module name is the name by which the computer running this script is known
 on the network. For instance 'MasterBedroom'. Module names cannot have ','
@@ -13,9 +13,9 @@ Device type is 'bluetooth'
 MAC Addr is the device's MAC address
 BT device name is the bluetooth device's name
 
-    Usage: btscan [options]
+  Usage: btscan [options]
    
-     Options:
+    Options:
    
        -h, --help                   output usage information
        -V, --version                output the version number
