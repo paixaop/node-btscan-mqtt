@@ -1,5 +1,5 @@
 {
-  "name": "bt_scan",
+  "name": "btscan",
   "version": "1.0.0",
   "description": "Scan for bluetooth devices and report them on a MQTT channel",
   "main": "index.js",
@@ -11,6 +11,10 @@
     "iot",
     "bluetooth"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paixaop/node-btscan-mqtt"
+  },
   "author": "Pedro Paixao",
   "license": "MIT",
   "dependencies": {
