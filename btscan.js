@@ -83,7 +83,9 @@ cli
   
   cli.parse(process.argv);
   
-require("console-stamp")(console, "HH:MM:ss.l", '[' + process.pid + ']');
+if (!cli.help) {
+  require("console-stamp")(console, "HH:MM:ss.l", '[' + process.pid + ']');
+}
 
 if (!cli.host) {
   console.log('please specify host of the mqtt broker');
